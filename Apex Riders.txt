@@ -1,0 +1,50 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class RaceManager : MonoBehaviour
+{
+    public List<RaceCar> cars;
+    public Transform[] checkpoints;
+    public int[] points = { 500, 450, 300, 250 };
+
+    void Update()
+    {
+        UpdateRankings();
+    }
+
+    void UpdateRankings()
+    {
+        cars.Sort((a, b) => b.DistanceTraveled().CompareTo(a.DistanceTraveled()));
+
+        for (int i = 0; i < cars.Count; i++)
+        {
+            cars[i].UpdatePoints(points[i]);
+            cars[i].DisplayRank(i + 1);
+        }
+    }
+}
+
+using UnityEngine;
+
+public class RaceCar : MonoBehaviour
+{
+    private float totalDistance = 0f;
+    private int score = 0;
+    private int currentRank = 0;
+
+    public void UpdatePoints(int pts)
+    {
+        score = pts;
+    }
+
+    public void DisplayRank(int rank)
+    {
+        currentRank = rank;
+        // Optionally show rank above car or UI
+    }
+
+    public float DistanceTraveled()
+    {
+        return Vector3.Distance(Vector3.zero, transform.position); // Simplified
+    }
+}
